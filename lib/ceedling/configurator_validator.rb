@@ -78,9 +78,10 @@ class ConfiguratorValidator
     return true if (filepath =~ TOOL_EXECUTOR_ARGUMENT_REPLACEMENT_PATTERN)
     
     if (not @file_wrapper.exist?(filepath))
+      white_list = [config[:project][:build_root]]
 
       # See if we can deal with it internally.
-      if GENERATED_DIR_PATH.include?(filepath)      
+      if GENERATED_DIR_PATH.include?(filepath) or white_list.include?(filepath)
         # we already made this directory before let's make it again.
         FileUtils.mkdir_p File.join(File.dirname(__FILE__), filepath)
         @stream_wrapper.stderr_puts("WARNING: Generated filepath #{format_key_sequence(keys, hash[:depth])}['#{filepath}'] does not exist on disk. Recreating") 
